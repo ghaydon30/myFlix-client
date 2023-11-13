@@ -27318,33 +27318,61 @@ var _s = $RefreshSig$();
 const MainView = ()=>{
     _s();
     // useState creates an array of movies set to following values, and updated with a method that is assigned to setMovies
-    const [movies, setMovies] = (0, _react.useState)([
-        {
-            id: 1,
-            title: "Iron Man",
-            director: "Jon Favreau",
-            genre: "Action",
-            description: "After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.",
-            image: "https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg"
-        },
-        {
-            id: 2,
-            title: "Dunkirk",
-            director: "Christopher Nolan",
-            genre: "Drama",
-            description: "Allied soldiers from Belgium, the British Commonwealth and Empire, and France are surrounded by the German Army and evacuated during a fierce battle in World War II.",
-            image: "https://resizing.flixster.com/Q8brnMSWFLzW9S2nPmfqAYdQRQg=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzL2I1MWE0NTljLTA3ODgtNDZkYy04NTcwLTgzMzg3ZjRmMzRhNC53ZWJw"
-        },
-        {
-            id: 3,
-            title: "Inception",
-            director: "Christopher Nolan",
-            genre: "Drama",
-            description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.",
-            image: "https://flxt.tmsimg.com/assets/p7825626_p_v8_af.jpg"
-        }
-    ]);
-    // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
+    const [movies, setMovies] = (0, _react.useState)([]);
+    (0, _react.useEffect)(()=>{
+        // fetch returns a promise (object which represents completion
+        // or failure of an asynchronous operation)
+        fetch("https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies")// .then function passed promise object from fetch
+        // .then converts fetch promise response object to JSON object
+        .then((res)=>res.json())// 1st .then function passes callback (json object) to .then
+        // 2nd .then logs JSON object data to console
+        .then((data)=>{
+            // moviesFromApi set to doc array made using map function
+            // .map() creates array with returned key value pairs defined below
+            const moviesFromApi = data.map((doc)=>{
+                return {
+                    id: doc._id,
+                    title: doc.Title,
+                    director: doc.Director.Name,
+                    genre: doc.Genre.Name,
+                    description: doc.Description,
+                    image: doc.ImagePath
+                };
+            });
+            // use setMovies function call from useState() to "hook" update
+            // to state of your component (moviesFromApi array variable)
+            setMovies(moviesFromApi);
+        });
+    // Empty dependency array passed as second argument to tell React
+    // callback doesn't depend on changes in props or state
+    }, []);
+    /* 
+PREVIOUSLY USED MOVIES FOR TESTING PURPOSES
+  {
+      id: 1,
+      title: 'Iron Man',
+      director: 'Jon Favreau',
+      genre: 'Action',
+      description: 'After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.',
+      image: 'https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg'
+    },
+    {
+      id: 2,
+      title: 'Dunkirk',
+      director: 'Christopher Nolan',
+      genre: 'Drama',
+      description: 'Allied soldiers from Belgium, the British Commonwealth and Empire, and France are surrounded by the German Army and evacuated during a fierce battle in World War II.',
+      image: 'https://resizing.flixster.com/Q8brnMSWFLzW9S2nPmfqAYdQRQg=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzL2I1MWE0NTljLTA3ODgtNDZkYy04NTcwLTgzMzg3ZjRmMzRhNC53ZWJw'
+    },
+    {
+      id: 3,
+      title: 'Inception',
+      director: 'Christopher Nolan',
+      genre: 'Drama',
+      description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.',
+      image: 'https://flxt.tmsimg.com/assets/p7825626_p_v8_af.jpg'
+    }
+*/ // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
     const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
     // sets selectedMovie to null if property onBackClick is actuated by event listener on movie-view
     if (selectedMovie) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieView.MovieView), {
@@ -27352,7 +27380,7 @@ const MainView = ()=>{
         onBackClick: ()=>setSelectedMovie(null)
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 42,
+        lineNumber: 75,
         columnNumber: 7
     }, undefined);
     // returns a statement if the movies array is empty 
@@ -27360,7 +27388,7 @@ const MainView = ()=>{
         children: "The list is empty!"
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 48,
+        lineNumber: 81,
         columnNumber: 12
     }, undefined);
     else return(// map method maps each element in the movies array to a piece of the UI
@@ -27373,16 +27401,16 @@ const MainView = ()=>{
                 }
             }, movie.id, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 55,
+                lineNumber: 88,
                 columnNumber: 11
             }, undefined))
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 53,
+        lineNumber: 86,
         columnNumber: 7
     }, undefined));
 };
-_s(MainView, "zi8vADNZZiuHV3sWikCVsnduDMk=");
+_s(MainView, "llzgrUkvR/+OoCNfiqlA1H2LLFI=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
@@ -27418,14 +27446,17 @@ const MovieCard = ({ movie, onMovieClick })=>{
     }, undefined);
 };
 _c = MovieCard;
+// Define prop constraints for MovieCard using PropTypes
 MovieCard.propTypes = {
+    // Requires that props object contains a movie object (shape means object)
+    // props movie object must contain below required data types
     movie: (0, _propTypesDefault.default).shape({
-        id: (0, _propTypesDefault.default).string.isRequired,
         title: (0, _propTypesDefault.default).string.isRequired,
         director: (0, _propTypesDefault.default).string.isRequired,
         genre: (0, _propTypesDefault.default).string.isRequired,
         description: (0, _propTypesDefault.default).string.isRequired
     }).isRequired,
+    // props object must contain onMovieClick and it must be a function
     onMovieClick: (0, _propTypesDefault.default).func.isRequired
 };
 var _c;

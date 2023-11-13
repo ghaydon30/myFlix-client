@@ -9,21 +9,33 @@ export const MainView = () => {
   const [movies, setMovies] = useState([]);
 
 useEffect(() => {
+  // fetch returns a promise (object which represents completion
+  // or failure of an asynchronous operation)
   fetch('https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies')
+  // .then function passed promise object from fetch
+  // .then converts fetch promise response object to JSON object
   .then((res) => res.json())
+  // 1st .then function passes callback (json object) to .then
+  // 2nd .then logs JSON object data to console
   .then((data) => {
+  // moviesFromApi set to doc array made using map function
+  // .map() creates array with returned key value pairs defined below
     const moviesFromApi = data.map((doc) => {
       return {
-        id: doc.id,
-        title: doc.title,
-        director: doc.director,
-        genre: doc.genre,
-        description: doc.description,
-        image: doc.imagepath
+        id: doc._id,
+        title: doc.Title,
+        director: doc.Director.Name,
+        genre: doc.Genre.Name,
+        description: doc.Description,
+        image: doc.ImagePath
       };
     });
+    // use setMovies function call from useState() to "hook" update
+    // to state of your component (moviesFromApi array variable)
     setMovies(moviesFromApi);
   });
+  // Empty dependency array passed as second argument to tell React
+  // callback doesn't depend on changes in props or state
 }, []);
 
   /* 
