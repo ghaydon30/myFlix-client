@@ -1,13 +1,34 @@
 // Child component imports, note they must have capitalized names!
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 
 // Export MainView component for use in index.js, MainView is the highest level parent component
 export const MainView = () => {
   // useState creates an array of movies set to following values, and updated with a method that is assigned to setMovies
-  const [movies, setMovies] = useState([
-    {
+  const [movies, setMovies] = useState([]);
+
+useEffect(() => {
+  fetch('https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies')
+  .then((res) => res.json())
+  .then((data) => {
+    const moviesFromApi = data.map((doc) => {
+      return {
+        id: doc.id,
+        title: doc.title,
+        director: doc.director,
+        genre: doc.genre,
+        description: doc.description,
+        image: doc.imagepath
+      };
+    });
+    setMovies(moviesFromApi);
+  });
+}, []);
+
+  /* 
+PREVIOUSLY USED MOVIES FOR TESTING PURPOSES
+  {
       id: 1,
       title: 'Iron Man',
       director: 'Jon Favreau',
@@ -31,7 +52,7 @@ export const MainView = () => {
       description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.',
       image: 'https://flxt.tmsimg.com/assets/p7825626_p_v8_af.jpg'
     }
-  ]);
+*/
 
   // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
   const [selectedMovie, setSelectedMovie] = useState(null);
