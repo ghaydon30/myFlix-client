@@ -1,13 +1,46 @@
 // Child component imports, note they must have capitalized names!
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 
 // Export MainView component for use in index.js, MainView is the highest level parent component
 export const MainView = () => {
   // useState creates an array of movies set to following values, and updated with a method that is assigned to setMovies
-  const [movies, setMovies] = useState([
-    {
+  const [movies, setMovies] = useState([]);
+
+useEffect(() => {
+  // fetch returns a promise (object which represents completion
+  // or failure of an asynchronous operation)
+  fetch('https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies')
+  // .then function passed promise object from fetch
+  // .then converts fetch promise response object to JSON object
+  .then((res) => res.json())
+  // 1st .then function passes callback (json object) to .then
+  // 2nd .then logs JSON object data to console
+  .then((data) => {
+  // moviesFromApi set to doc array made using map function
+  // .map() creates array with returned key value pairs defined below
+    const moviesFromApi = data.map((doc) => {
+      return {
+        id: doc._id,
+        title: doc.Title,
+        director: doc.Director.Name,
+        genre: doc.Genre.Name,
+        description: doc.Description,
+        image: doc.ImagePath
+      };
+    });
+    // use setMovies function call from useState() to "hook" update
+    // to state of your component (moviesFromApi array variable)
+    setMovies(moviesFromApi);
+  });
+  // Empty dependency array passed as second argument to tell React
+  // callback doesn't depend on changes in props or state
+}, []);
+
+  /* 
+PREVIOUSLY USED MOVIES FOR TESTING PURPOSES
+  {
       id: 1,
       title: 'Iron Man',
       director: 'Jon Favreau',
@@ -31,7 +64,7 @@ export const MainView = () => {
       description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.',
       image: 'https://flxt.tmsimg.com/assets/p7825626_p_v8_af.jpg'
     }
-  ]);
+*/
 
   // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
   const [selectedMovie, setSelectedMovie] = useState(null);
