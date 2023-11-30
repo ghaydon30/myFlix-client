@@ -1060,7 +1060,7 @@ module.exports = require("e29588310e4e913b");
 })();
 
 },{}],"VBRbm":[function(require,module,exports) {
-var process = require("88bc76ae510f249e");
+var process = require("b8c7307faed06941");
 !function(e, t) {
     module.exports = t();
 }(window, function() {
@@ -2790,7 +2790,7 @@ var process = require("88bc76ae510f249e");
     ]);
 });
 
-},{"88bc76ae510f249e":"d5jf4"}],"d5jf4":[function(require,module,exports) {
+},{"b8c7307faed06941":"d5jf4"}],"d5jf4":[function(require,module,exports) {
 // shim for using process in browser
 var process = module.exports = {};
 // cached from whatever global is present so that test runners that stub it
@@ -27307,6 +27307,7 @@ $parcel$ReactRefreshHelpers$f7a6.prelude(module);
 
 try {
 // Child component imports, note they must have capitalized names!
+// The location is not required to have the ".jsx" at the end
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "MainView", ()=>MainView);
@@ -27314,11 +27315,18 @@ var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _movieCard = require("../movie-card/movie-card");
 var _movieView = require("../movie-view/movie-view");
+var _loginView = require("../login-view/login-view");
 var _s = $RefreshSig$();
 const MainView = ()=>{
     _s();
     // useState creates an array of movies set to following values, and updated with a method that is assigned to setMovies
     const [movies, setMovies] = (0, _react.useState)([]);
+    // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
+    const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
+    // State variable set users to null initially, as this state will prompt the login screen
+    const [user, setUser] = (0, _react.useState)(null);
+    // Create a state variable for the token retrieved from the API by login-view. This along with the user is in JSON format
+    const [token, setToken] = (0, _react.useState)(null);
     (0, _react.useEffect)(()=>{
         // fetch returns a promise (object which represents completion
         // or failure of an asynchronous operation)
@@ -27346,41 +27354,27 @@ const MainView = ()=>{
     // Empty dependency array passed as second argument to tell React
     // callback doesn't depend on changes in props or state
     }, []);
-    /* 
-PREVIOUSLY USED MOVIES FOR TESTING PURPOSES
-  {
-      id: 1,
-      title: 'Iron Man',
-      director: 'Jon Favreau',
-      genre: 'Action',
-      description: 'After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.',
-      image: 'https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg'
-    },
-    {
-      id: 2,
-      title: 'Dunkirk',
-      director: 'Christopher Nolan',
-      genre: 'Drama',
-      description: 'Allied soldiers from Belgium, the British Commonwealth and Empire, and France are surrounded by the German Army and evacuated during a fierce battle in World War II.',
-      image: 'https://resizing.flixster.com/Q8brnMSWFLzW9S2nPmfqAYdQRQg=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzL2I1MWE0NTljLTA3ODgtNDZkYy04NTcwLTgzMzg3ZjRmMzRhNC53ZWJw'
-    },
-    {
-      id: 3,
-      title: 'Inception',
-      director: 'Christopher Nolan',
-      genre: 'Drama',
-      description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.',
-      image: 'https://flxt.tmsimg.com/assets/p7825626_p_v8_af.jpg'
-    }
-*/ // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
-    const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
+    // Returns the LoginView page if there is not a user signed in
+    if (!user) // Pass a prop from MainView with a callback function that will update the current user
+    // Callback function assigned to onLoggedIn prop takes parameter user from LoginView and executes setUser to update the mainView user variable
+    // use setToken to update the token state with the token retrieved from the API (now a string)
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginView.LoginView), {
+        onLoggedIn: (user, token)=>{
+            setUser(user);
+            setToken(token);
+        }
+    }, void 0, false, {
+        fileName: "src/components/main-view/main-view.jsx",
+        lineNumber: 58,
+        columnNumber: 7
+    }, undefined);
     // sets selectedMovie to null if property onBackClick is actuated by event listener on movie-view
     if (selectedMovie) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieView.MovieView), {
         movie: selectedMovie,
         onBackClick: ()=>setSelectedMovie(null)
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 75,
+        lineNumber: 69,
         columnNumber: 7
     }, undefined);
     // returns a statement if the movies array is empty 
@@ -27388,29 +27382,43 @@ PREVIOUSLY USED MOVIES FOR TESTING PURPOSES
         children: "The list is empty!"
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 81,
+        lineNumber: 75,
         columnNumber: 12
     }, undefined);
-    else return(// map method maps each element in the movies array to a piece of the UI
+    return(// map method maps each element in the movies array to a piece of the UI
     // This is done by filling and mapping a MovieCard with information from movies
+    // Add a button for logout at the bottom of the page with an onClick handler from React
+    // onClick handler has a callback function that calls setUser and passes null value
     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        children: movies.map((movie)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCard.MovieCard), {
-                movie: movie,
-                onMovieClick: (newSelectedMovie)=>{
-                    setSelectedMovie(newSelectedMovie);
-                }
-            }, movie.id, false, {
+        children: [
+            movies.map((movie)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCard.MovieCard), {
+                    movie: movie,
+                    onMovieClick: (newSelectedMovie)=>{
+                        setSelectedMovie(newSelectedMovie);
+                    }
+                }, movie.id, false, {
+                    fileName: "src/components/main-view/main-view.jsx",
+                    lineNumber: 85,
+                    columnNumber: 11
+                }, undefined)),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                onClick: ()=>{
+                    setUser(null);
+                },
+                children: "Logout"
+            }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 88,
-                columnNumber: 11
-            }, undefined))
-    }, void 0, false, {
+                lineNumber: 93,
+                columnNumber: 9
+            }, undefined)
+        ]
+    }, void 0, true, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 86,
+        lineNumber: 83,
         columnNumber: 7
     }, undefined));
 };
-_s(MainView, "llzgrUkvR/+OoCNfiqlA1H2LLFI=");
+_s(MainView, "ld1mNqbzEgxPu9ZfASjBJ7ZrUMw=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
@@ -27420,7 +27428,7 @@ $RefreshReg$(_c, "MainView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD"}],"bwuIu":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD","../login-view/login-view":"9YtA0"}],"bwuIu":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$67b2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -28385,6 +28393,129 @@ $RefreshReg$(_c, "MovieView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD"}]},["eWG5L","gUuat","d8Dch"], "d8Dch", "parcelRequireaec4")
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD"}],"9YtA0":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$9fee = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$9fee.prelude(module);
+
+try {
+// Import React
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "LoginView", ()=>LoginView);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$();
+const LoginView = ({ onLoggedIn })=>{
+    _s();
+    // Create state variables for username and password
+    const [username, setUsername] = (0, _react.useState)("");
+    const [password, setPassword] = (0, _react.useState)("");
+    // Create a function expression to handle the submission event
+    const handleSubmit = (event)=>{
+        // Use event.preventDefault() to prevent the default behavior of the form which is to reload the entire page
+        event.preventDefault();
+        // Create a data object with access and secret keys holding username and password respectively
+        const data = {
+            access: username,
+            secret: password
+        };
+        // Send a post (via fetch) to your API /login endpoint (which uses passport) with... 
+        // method POST as a string, headers: {"content-Type": "application/json"} and body of data object in JSON string format
+        // else alert the user that the login was failed
+        fetch("https://cf-movies-flix-24da19dbdabb.herokuapp.com/login", {
+            method: "POST",
+            headers: {
+                "content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then((response)=>response.json()).then((data)=>{
+            // Log data to console, and if you get the user data back, pass the user and token back to MainView through onLoggedIn
+            console.log("Login Response: ", data);
+            if (data.user) onLoggedIn(data.user, data.token);
+            else alert("User Not Found");
+        })// Catch in case an error arrives during the promises
+        .catch((e)=>{
+            alert("Something went wrong");
+        });
+    };
+    return(// Callback for the onSubmit event of "form". Callback tells Login API to validate username and password
+    // handleSubmit is a react hook that will receive the form data if form validation is successful
+    // Combine the username and password's mutable state with their component's state creating a "single source of truth"
+    // Give inputs property of "value" assigned to react hook "username" from react useState()
+    // Give inputs property of "onChange" assigned to a function passed an event and using setUsername() from react useState()
+    // in setUsername(), use the event object.target.value, the read-only target property of the Event interface is a reference to the object onto which the event was dispatched
+    // Specify both username and password are required using the "required" attribute
+    // Add a minlength attribute the the username input of the form
+    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+        onSubmit: handleSubmit,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: [
+                    "Username",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "text",
+                        value: username,
+                        onChange: (e)=>setUsername(e.target.value),
+                        minLength: "5",
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/components/login-view/login-view.jsx",
+                        lineNumber: 62,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/login-view/login-view.jsx",
+                lineNumber: 60,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: [
+                    "Password",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "password",
+                        value: password,
+                        onChange: (e)=>setPassword(e.target.value),
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/components/login-view/login-view.jsx",
+                        lineNumber: 72,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/login-view/login-view.jsx",
+                lineNumber: 70,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                type: "submit",
+                children: "Submit"
+            }, void 0, false, {
+                fileName: "src/components/login-view/login-view.jsx",
+                lineNumber: 79,
+                columnNumber: 7
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/components/login-view/login-view.jsx",
+        lineNumber: 59,
+        columnNumber: 5
+    }, undefined));
+};
+_s(LoginView, "Lrw7JeD9zj6OUWhT/IH4OIvPKEk=");
+_c = LoginView;
+var _c;
+$RefreshReg$(_c, "LoginView");
+
+  $parcel$ReactRefreshHelpers$9fee.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD","react":"21dqq"}]},["eWG5L","gUuat","d8Dch"], "d8Dch", "parcelRequireaec4")
 
 //# sourceMappingURL=index.b4b6dfad.js.map
