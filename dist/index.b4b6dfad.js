@@ -27325,6 +27325,7 @@ const MainView = ()=>{
     // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
     const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
     // Use stored values (in localStorage) as default values of user and token states (what we got from the back end)
+    // NOTE: Look later into why we don't need to use JSON with token, because it is simply a string?
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const storedToken = localStorage.getItem("token");
     // Checks if there is anything in storeUser and storedToken, if not, initializes with null
@@ -27381,13 +27382,13 @@ const MainView = ()=>{
                 }
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 73,
+                lineNumber: 74,
                 columnNumber: 9
             }, undefined),
             "or",
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _signupView.SignupView), {}, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 78,
+                lineNumber: 79,
                 columnNumber: 9
             }, undefined)
         ]
@@ -27398,7 +27399,7 @@ const MainView = ()=>{
         onBackClick: ()=>setSelectedMovie(null)
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 86,
+        lineNumber: 87,
         columnNumber: 7
     }, undefined);
     // returns a statement if the movies array is empty 
@@ -27406,7 +27407,7 @@ const MainView = ()=>{
         children: "The list is empty!"
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 92,
+        lineNumber: 93,
         columnNumber: 12
     }, undefined);
     return(// map method maps each element in the movies array to a piece of the UI
@@ -27422,7 +27423,7 @@ const MainView = ()=>{
                     }
                 }, movie.id, false, {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 102,
+                    lineNumber: 103,
                     columnNumber: 11
                 }, undefined)),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -27434,13 +27435,13 @@ const MainView = ()=>{
                 children: "Logout"
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 110,
+                lineNumber: 111,
                 columnNumber: 9
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 100,
+        lineNumber: 101,
         columnNumber: 7
     }, undefined));
 };
