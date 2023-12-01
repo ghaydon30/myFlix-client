@@ -7,6 +7,13 @@ import React from 'react';
 import { useState } from 'react';
 
 export const SignupView = () => {
+  
+  // Declare state variables for signup inputs
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [birthday, setBirthday] = useState('');
+  
   // Create a function expression to handle the submission event
   const handleSubmit = (event) => {
     
@@ -25,7 +32,7 @@ export const SignupView = () => {
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' }
     }).then((res) => {
-      if (Response.ok) {
+      if (res.ok) {
         alert('Signup successful');
         window.location.reload();
       } else {
@@ -37,7 +44,7 @@ export const SignupView = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Username
+        Username:
         <input 
           type='text'
           value={username}
@@ -47,7 +54,7 @@ export const SignupView = () => {
           />
         </label>
       <label>
-        Password
+        Password:
         <input 
           type='password' 
           value={password}
@@ -56,7 +63,7 @@ export const SignupView = () => {
         />
       </label>
       <label>
-        Email
+        Email:
         <input 
           type='email' 
           value={email}
@@ -65,7 +72,7 @@ export const SignupView = () => {
         />
       </label>
       <label>
-        Birthday
+        Birthday:
         <input 
           type='date' 
           value={birthday}

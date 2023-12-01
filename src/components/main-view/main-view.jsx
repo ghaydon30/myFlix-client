@@ -18,15 +18,17 @@ export const MainView = () => {
   
   // Use stored values (in localStorage) as default values of user and token states (what we got from the back end)
   const storedUser = JSON.parse(localStorage.getItem('user'));
-  const storedToken = JSON.parse(localStorage.getItem('token'));
+  const storedToken = localStorage.getItem('token');
   // Checks if there is anything in storeUser and storedToken, if not, initializes with null
   const [user, setUser] = useState(storedUser? storedUser : null);
   const [token, setToken] = useState(storedToken? storedToken : null);
 
   useEffect(() => {
     // useEffect returns nothing of a JWT is not present, terminates function with a return statement
-    if (!token) return;
-    
+    if (!token) {
+      return;
+    };
+
     // fetch returns a promise (object which represents completion
     // or failure of an asynchronous operation)
     fetch('https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies', {
@@ -35,7 +37,7 @@ export const MainView = () => {
     })
     // .then function passed promise object from fetch
     // .then converts fetch promise response object to JSON object
-    .then((res) => res.json())
+    .then((response) => response.json())
     // 1st .then function passes callback (json object) to .then
     // 2nd .then logs JSON object data to console
     .then((data) => {

@@ -1,8 +1,6 @@
 // Import React
 import React from 'react';
 import { useState } from 'react';
-import { SignupView } from '../signup-view/signup-view';
-
 
 
 // LoginView creates a form with two labels for username and password
@@ -20,8 +18,8 @@ export const LoginView = ({ onLoggedIn }) => {
 
     // Create a data object with access and secret keys holding username and password respectively
     const data = {
-      access: username,
-      secret: password
+      Username: username,
+      Password: password
     };
 
     // Send a post (via fetch) to your API /login endpoint (which uses passport) with... 
@@ -29,7 +27,7 @@ export const LoginView = ({ onLoggedIn }) => {
     // else alert the user that the login was failed
     fetch('https://cf-movies-flix-24da19dbdabb.herokuapp.com/login', {
       method: 'POST',
-      headers: {"content-Type": "application/json"},
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
       // Convert response from API into a JSON (I thought the API sends as a JSON) 
     }).then((response) => response.json()) 
@@ -38,8 +36,8 @@ export const LoginView = ({ onLoggedIn }) => {
         console.log('Login Response: ', data);
         if (data.user) {
           // Use localStorage.setItem(keyName, keyValue) to store the user and token in browser storage
-          localStorage.setItem("user", data.user)
-          localStorage.setItem("token", data.token)
+          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("token", data.token);
           onLoggedIn(data.user, data.token);  
         } else {
           alert('User Not Found');

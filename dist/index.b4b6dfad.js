@@ -27316,6 +27316,7 @@ var _react = require("react");
 var _movieCard = require("../movie-card/movie-card");
 var _movieView = require("../movie-view/movie-view");
 var _loginView = require("../login-view/login-view");
+var _signupView = require("../signup-view/signup-view");
 var _s = $RefreshSig$();
 const MainView = ()=>{
     _s();
@@ -27323,16 +27324,25 @@ const MainView = ()=>{
     const [movies, setMovies] = (0, _react.useState)([]);
     // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
     const [selectedMovie, setSelectedMovie] = (0, _react.useState)(null);
-    // State variable set users to null initially, as this state will prompt the login screen
-    const [user, setUser] = (0, _react.useState)(null);
-    // Create a state variable for the token retrieved from the API by login-view. This along with the user is in JSON format
-    const [token, setToken] = (0, _react.useState)(null);
+    // Use stored values (in localStorage) as default values of user and token states (what we got from the back end)
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedToken = localStorage.getItem("token");
+    // Checks if there is anything in storeUser and storedToken, if not, initializes with null
+    const [user, setUser] = (0, _react.useState)(storedUser ? storedUser : null);
+    const [token, setToken] = (0, _react.useState)(storedToken ? storedToken : null);
     (0, _react.useEffect)(()=>{
+        // useEffect returns nothing of a JWT is not present, terminates function with a return statement
+        if (!token) return;
         // fetch returns a promise (object which represents completion
         // or failure of an asynchronous operation)
-        fetch("https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies")// .then function passed promise object from fetch
+        fetch("https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies", {
+            // sent JWT in header of /movies API call
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })// .then function passed promise object from fetch
         // .then converts fetch promise response object to JSON object
-        .then((res)=>res.json())// 1st .then function passes callback (json object) to .then
+        .then((response)=>response.json())// 1st .then function passes callback (json object) to .then
         // 2nd .then logs JSON object data to console
         .then((data)=>{
             // moviesFromApi set to doc array made using map function
@@ -27351,30 +27361,44 @@ const MainView = ()=>{
             // to state of your component (moviesFromApi array variable)
             setMovies(moviesFromApi);
         });
-    // Empty dependency array passed as second argument to tell React
     // callback doesn't depend on changes in props or state
-    }, []);
+    // Add token as callback to the useEffect function as a dependency array
+    }, [
+        token
+    ]);
     // Returns the LoginView page if there is not a user signed in
     if (!user) // Pass a prop from MainView with a callback function that will update the current user
     // Callback function assigned to onLoggedIn prop takes parameter user from LoginView and executes setUser to update the mainView user variable
     // use setToken to update the token state with the token retrieved from the API (now a string)
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginView.LoginView), {
-        onLoggedIn: (user, token)=>{
-            setUser(user);
-            setToken(token);
-        }
-    }, void 0, false, {
-        fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 58,
-        columnNumber: 7
-    }, undefined);
+    return(// If a user is not found, display SignupView in MainView along with the existing LoginView
+    // So long as SignupView is imported, this component can be inserted as an element
+    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginView.LoginView), {
+                onLoggedIn: (user, token)=>{
+                    setUser(user);
+                    setToken(token);
+                }
+            }, void 0, false, {
+                fileName: "src/components/main-view/main-view.jsx",
+                lineNumber: 73,
+                columnNumber: 9
+            }, undefined),
+            "or",
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _signupView.SignupView), {}, void 0, false, {
+                fileName: "src/components/main-view/main-view.jsx",
+                lineNumber: 78,
+                columnNumber: 9
+            }, undefined)
+        ]
+    }, void 0, true));
     // sets selectedMovie to null if property onBackClick is actuated by event listener on movie-view
     if (selectedMovie) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieView.MovieView), {
         movie: selectedMovie,
         onBackClick: ()=>setSelectedMovie(null)
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 69,
+        lineNumber: 86,
         columnNumber: 7
     }, undefined);
     // returns a statement if the movies array is empty 
@@ -27382,7 +27406,7 @@ const MainView = ()=>{
         children: "The list is empty!"
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 75,
+        lineNumber: 92,
         columnNumber: 12
     }, undefined);
     return(// map method maps each element in the movies array to a piece of the UI
@@ -27398,27 +27422,29 @@ const MainView = ()=>{
                     }
                 }, movie.id, false, {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 85,
+                    lineNumber: 102,
                     columnNumber: 11
                 }, undefined)),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                 onClick: ()=>{
                     setUser(null);
+                    setToken(null);
+                    localStorage.clear();
                 },
                 children: "Logout"
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 93,
+                lineNumber: 110,
                 columnNumber: 9
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 83,
+        lineNumber: 100,
         columnNumber: 7
     }, undefined));
 };
-_s(MainView, "ld1mNqbzEgxPu9ZfASjBJ7ZrUMw=");
+_s(MainView, "BlfpIHShIpB8l6l5+I0r6zS3Vck=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
@@ -27428,7 +27454,7 @@ $RefreshReg$(_c, "MainView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD","../login-view/login-view":"9YtA0"}],"bwuIu":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","../movie-card/movie-card":"bwuIu","../movie-view/movie-view":"ggaUx","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD","../login-view/login-view":"9YtA0","../signup-view/signup-view":"4OGiN"}],"bwuIu":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$67b2 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -28419,8 +28445,8 @@ const LoginView = ({ onLoggedIn })=>{
         event.preventDefault();
         // Create a data object with access and secret keys holding username and password respectively
         const data = {
-            access: username,
-            secret: password
+            Username: username,
+            Password: password
         };
         // Send a post (via fetch) to your API /login endpoint (which uses passport) with... 
         // method POST as a string, headers: {"content-Type": "application/json"} and body of data object in JSON string format
@@ -28428,14 +28454,18 @@ const LoginView = ({ onLoggedIn })=>{
         fetch("https://cf-movies-flix-24da19dbdabb.herokuapp.com/login", {
             method: "POST",
             headers: {
-                "content-Type": "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
         }).then((response)=>response.json()).then((data)=>{
             // Log data to console, and if you get the user data back, pass the user and token back to MainView through onLoggedIn
             console.log("Login Response: ", data);
-            if (data.user) onLoggedIn(data.user, data.token);
-            else alert("User Not Found");
+            if (data.user) {
+                // Use localStorage.setItem(keyName, keyValue) to store the user and token in browser storage
+                localStorage.setItem("user", JSON.stringify(data.user));
+                localStorage.setItem("token", data.token);
+                onLoggedIn(data.user, data.token);
+            } else alert("User Not Found");
         })// Catch in case an error arrives during the promises
         .catch((e)=>{
             alert("Something went wrong");
@@ -28463,13 +28493,13 @@ const LoginView = ({ onLoggedIn })=>{
                         required: true
                     }, void 0, false, {
                         fileName: "src/components/login-view/login-view.jsx",
-                        lineNumber: 62,
+                        lineNumber: 64,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/login-view/login-view.jsx",
-                lineNumber: 60,
+                lineNumber: 62,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -28482,13 +28512,13 @@ const LoginView = ({ onLoggedIn })=>{
                         required: true
                     }, void 0, false, {
                         fileName: "src/components/login-view/login-view.jsx",
-                        lineNumber: 72,
+                        lineNumber: 74,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/login-view/login-view.jsx",
-                lineNumber: 70,
+                lineNumber: 72,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -28496,13 +28526,13 @@ const LoginView = ({ onLoggedIn })=>{
                 children: "Submit"
             }, void 0, false, {
                 fileName: "src/components/login-view/login-view.jsx",
-                lineNumber: 79,
+                lineNumber: 81,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/login-view/login-view.jsx",
-        lineNumber: 59,
+        lineNumber: 61,
         columnNumber: 5
     }, undefined));
 };
@@ -28516,6 +28546,159 @@ $RefreshReg$(_c, "LoginView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD","react":"21dqq"}]},["eWG5L","gUuat","d8Dch"], "d8Dch", "parcelRequireaec4")
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD","react":"21dqq"}],"4OGiN":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$73d1 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$73d1.prelude(module);
+
+try {
+// Create a function component with a form and a submit button.
+// Display SignupView on MainView along with LoginView.
+// Add input fields to the signup form that match your backend validation logic.
+// Import React
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "SignupView", ()=>SignupView);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$();
+const SignupView = ()=>{
+    _s();
+    // Declare state variables for signup inputs
+    const [username, setUsername] = (0, _react.useState)("");
+    const [password, setPassword] = (0, _react.useState)("");
+    const [email, setEmail] = (0, _react.useState)("");
+    const [birthday, setBirthday] = (0, _react.useState)("");
+    // Create a function expression to handle the submission event
+    const handleSubmit = (event)=>{
+        // Use event.preventDefault() to prevent the default behavior of the form which is to reload the entire page
+        event.preventDefault();
+        const data = {
+            Username: username,
+            Password: password,
+            Email: email,
+            Birthday: birthday
+        };
+        fetch("https://cf-movies-flix-24da19dbdabb.herokuapp.com/users", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then((res)=>{
+            if (res.ok) {
+                alert("Signup successful");
+                window.location.reload();
+            } else alert("Signup failed");
+        });
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+        onSubmit: handleSubmit,
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: [
+                    "Username:",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "text",
+                        value: username,
+                        onChange: (e)=>setUsername(e.target.value),
+                        minLength: "5",
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/components/signup-view/signup-view.jsx",
+                        lineNumber: 48,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/signup-view/signup-view.jsx",
+                lineNumber: 46,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: [
+                    "Password:",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "password",
+                        value: password,
+                        onChange: (e)=>setPassword(e.target.value),
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/components/signup-view/signup-view.jsx",
+                        lineNumber: 58,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/signup-view/signup-view.jsx",
+                lineNumber: 56,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: [
+                    "Email:",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "email",
+                        value: email,
+                        onChange: (e)=>setEmail(e.target.value),
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/components/signup-view/signup-view.jsx",
+                        lineNumber: 67,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/signup-view/signup-view.jsx",
+                lineNumber: 65,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                children: [
+                    "Birthday:",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "date",
+                        value: birthday,
+                        onChange: (e)=>setBirthday(e.target.value),
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/components/signup-view/signup-view.jsx",
+                        lineNumber: 76,
+                        columnNumber: 9
+                    }, undefined)
+                ]
+            }, void 0, true, {
+                fileName: "src/components/signup-view/signup-view.jsx",
+                lineNumber: 74,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                type: "submit",
+                children: "Submit"
+            }, void 0, false, {
+                fileName: "src/components/signup-view/signup-view.jsx",
+                lineNumber: 83,
+                columnNumber: 7
+            }, undefined)
+        ]
+    }, void 0, true, {
+        fileName: "src/components/signup-view/signup-view.jsx",
+        lineNumber: 45,
+        columnNumber: 5
+    }, undefined);
+};
+_s(SignupView, "tdA1KK8yaZidqYo0wscqshHt/KE=");
+_c = SignupView;
+var _c;
+$RefreshReg$(_c, "SignupView");
+
+  $parcel$ReactRefreshHelpers$73d1.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"bDixa","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"igmnD"}]},["eWG5L","gUuat","d8Dch"], "d8Dch", "parcelRequireaec4")
 
 //# sourceMappingURL=index.b4b6dfad.js.map
