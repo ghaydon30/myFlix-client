@@ -17,6 +17,7 @@ export const MainView = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   
   // Use stored values (in localStorage) as default values of user and token states (what we got from the back end)
+  // NOTE: Look later into why we don't need to use JSON with token, because it is simply a string?
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const storedToken = localStorage.getItem('token');
   // Checks if there is anything in storeUser and storedToken, if not, initializes with null
