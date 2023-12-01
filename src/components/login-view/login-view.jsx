@@ -1,6 +1,9 @@
 // Import React
 import React from 'react';
 import { useState } from 'react';
+// Import React Bootstrap components for Button and Form
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 
 // LoginView creates a form with two labels for username and password
@@ -58,29 +61,31 @@ export const LoginView = ({ onLoggedIn }) => {
     // in setUsername(), use the event object.target.value, the read-only target property of the Event interface is a reference to the object onto which the event was dispatched
     // Specify both username and password are required using the "required" attribute
     // Add a minlength attribute the the username input of the form
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username
-        <input 
+    
+    // Form uses Bootstrap
+    <Form onSubmit={handleSubmit}>
+      <Form.Group controlID='formUsername'>
+        <Form.Label>Username:</Form.Label>
+        <Form.Control
           type='text'
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           minLength='5'
           required
         />
-      </label>
-      <label>
-        Password
-        <input 
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Password:</Form.Label>
+        <Form.Control 
           type='password' 
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-      </label>
-      <button type='submit'>
+      </Form.Group>
+      <Button variant='primary' type='submit'>
         Submit
-      </button>
-    </form>
+      </Button>
+    </Form>
   );
 };

@@ -1,10 +1,13 @@
+// Import styling from movie-view.scss
+import './movie-view.scss';
+
 export const MovieView = ({ movie, onBackClick }) => {
   return (
     // Button allows for user to go back to the main list with onBackClick
     // This sets the selectedMovie attribute back to null
     <div>
       <div>
-        <img src={movie.image} />
+        <img className='img-movie_view' src={movie.image} />
       </div>
       <div>
         <span>Title: </span>
@@ -22,7 +25,7 @@ export const MovieView = ({ movie, onBackClick }) => {
         <span>Description: </span>
         <span>{movie.description}</span>
       </div>
-      <button onClick={onBackClick}>Back</button>
+      <button onClick={onBackClick} className='back-button'>Back</button>
     </div>
   );
 };

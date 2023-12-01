@@ -5,6 +5,9 @@ import { MovieCard } from '../movie-card/movie-card';
 import { MovieView } from '../movie-view/movie-view';
 import { LoginView } from '../login-view/login-view';
 import { SignupView } from '../signup-view/signup-view';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 
 
@@ -61,54 +64,52 @@ export const MainView = () => {
     // Add token as callback to the useEffect function as a dependency array
   }, [token]);
 
-  // Returns the LoginView page if there is not a user signed in
-  if (!user) {
-    // Pass a prop from MainView with a callback function that will update the current user
-    // Callback function assigned to onLoggedIn prop takes parameter user from LoginView and executes setUser to update the mainView user variable
-    // use setToken to update the token state with the token retrieved from the API (now a string)
-    return ( 
-      // If a user is not found, display SignupView in MainView along with the existing LoginView
-      // So long as SignupView is imported, this component can be inserted as an element
-      <>
-        <LoginView onLoggedIn={(user, token) => {
-          setUser(user)
-          setToken(token)
-        }} />
-        or 
-        <SignupView />
-      </>
-    );
-  }
-  
-  // sets selectedMovie to null if property onBackClick is actuated by event listener on movie-view
-  if (selectedMovie) {
-    return (
-      <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
-    );
-  }
-  
-  // returns a statement if the movies array is empty 
-  if (movies.length === 0) {
-    return <div>The list is empty!</div>;
-  } 
-  
+  // Rewrite of previous code now using Rows and ternary operators
   return (
-    // map method maps each element in the movies array to a piece of the UI
-    // This is done by filling and mapping a MovieCard with information from movies
-    // Add a button for logout at the bottom of the page with an onClick handler from React
-    // onClick handler has a callback function that calls setUser and passes null value
-      <div>
+    <Row className='justify-content-md-center'>
+      {!user ? (
+        // Pass a prop from MainView with a callback function that will update the current user
+        // Callback function assigned to onLoggedIn prop takes parameter user from LoginView and executes setUser to update the mainView user variable
+        // use setToken to update the token state with the token retrieved from the API (now a string)
+        // If a user is not found, display SignupView in MainView along with the existing LoginView
+        // So long as SignupView is imported, this component can be inserted as an element
+        <Col md={5}>
+          <LoginView onLoggedIn={(user, token) => {
+            setUser(user)
+            setToken(token)
+          }} />
+          or 
+          <SignupView />
+        </Col>
+      ) : selectedMovie ? (
+        // sets selectedMovie to null if property onBackClick is actuated by event listener on movie-view
+        <Col md={8}>
+          <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
+        </Col>
+        
+        // returns a statement if the movies array is empty 
+      ) : movies.length === 0 ? (
+        <div>The list is empty!</div>
+      ) : (
+        // map method maps each element in the movies array to a piece of the UI
+        // This is done by filling and mapping a MovieCard with information from movies
+        // Add a button for logout at the bottom of the page with an onClick handler from React
+        // onClick handler has a callback function that calls setUser and passes null value
+        // Key attribute required for recurring elements in succession in react 
+      <>
         {movies.map((movie) => (
-          <MovieCard 
-            key={movie.id}
-            movie={movie}
-            onMovieClick={(newSelectedMovie) => {
-              setSelectedMovie(newSelectedMovie);
-            }}
-          />
+          <Col className='mb-5' key={movie.id} md={3}>
+            <MovieCard 
+              movie={movie}
+              onMovieClick={(newSelectedMovie) => {
+                setSelectedMovie(newSelectedMovie);
+              }}
+            />
+          </Col>
         ))}
-        <button onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</button>
-      </div>
-  );
-
+        <Button className='mb-5' variant='primary' onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</Button>
+      </>
+      )}
+    </Row>
+  )
 };
