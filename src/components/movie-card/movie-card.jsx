@@ -1,16 +1,21 @@
 import PropTypes from 'prop-types';
+// Import button and card for using these bootstrap components
+import { Button, Card } from 'react-bootstrap';
 
 // Export this component for use in MainView
-// Card has onClick as an event listener inside of a div, as the listener cannot apply directly to a component
+// Card has onClick as an event listener inside of a Bootstrap card component
 export const MovieCard = ({ movie, onMovieClick }) => {
   return (
-    <div
-      onClick={() => {
-        onMovieClick(movie);
-      }}
-    >
-      {movie.title}
-    </div>
+    <Card className='h-100'>
+      <Card.Img variant='top' src={movie.image} />
+      <Card.Body>
+        <Card.Title>{movie.title}</Card.Title>
+        <Card.Text>{movie.director}</Card.Text>
+        <Button onClick={() => onMovieClick(movie)} variant='link'>
+          Open
+        </Button>
+      </Card.Body>
+    </Card>
   );
 };
 
