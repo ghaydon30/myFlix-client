@@ -1,14 +1,104 @@
-$primary: MidnightBlue;
-$body-bg: Azure;
+// Default variable overrides are included here (although this doesn't allow use of functions)
+// If functions are desired, import them first prior to default overrides
 
+$body-bg: #000;
+$body-color: white;
+$border-color: red;
+$btn-color: red;
+$btn-link-hover-color: red;
 
+// Basic Variables
+$primary-color: red;
+$secondary-color: black;
+$primary_background-color: black;
+$text_primary-color: white;
+$text_secondary-color: red;
+$border-color: white;
 
+// Note that import comes after any changes in bootstrap variables  
+// but before custom classes
+@import '~bootstrap/scss/bootstrap';
 
+.styled_movie-card {
+  margin-bottom: 15px;
+  position: relative;
+  // Allows for no overflow on card images when controlling height
+  overflow: hidden;
+  // Causes no wrapping text if it overflows
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 400px;
+}
 
-@import '~bootstrap/scss/bootstrap.scss';
+.primary-button_custom {
+  color: $text_primary-color;
+  background-color: $primary-color;
+  border-color: $primary-color;
+  margin-top: 20px;
+}
 
-$color: steelblue;
+.secondary-button {
+  color: $text_secondary-color;
+  background-color: $primary_background-color;
+  border-color: $border-color;
+  border-radius: 12px;
+}
 
+.custom-navbar {
+  background-color: $body-bg !important;
+}
+
+.custom-title_navlink {
+  color: $text_secondary-color;
+  font-size: 40px;
+}
+
+.custom-standard_navlink {
+color: $text_primary-color;
+font-size: 24px;
+}
+
+.form-entry {
+  margin-bottom: 20px;
+}
+
+// Find out what this is
+/*
 .my-flix {
   color: $color;
 }
+*/
+
+// Old location, delete when styling works
+/*
+// Basic Variables
+$primary-color: red;
+$secondary-color: black;
+$primary_background-color: black;
+$text_primary-color: white;
+$text_secondary-color: red;
+$border-color: white;
+
+.styled_movie-card {
+  margin-bottom: 15px;
+  position: relative;
+  // Allows for no overflow on card images when controlling height
+  overflow: hidden;
+  // Causes no wrapping text if it overflows
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 400px;
+}
+
+.btn-primaryX {
+  color: $text_primary-color;
+  background-color: $primary-color;
+}
+
+.secondary-button {
+  color: $text_secondary-color;
+  background-color: $primary_background-color;
+  border-color: $border-color;
+  border-radius: 12px;
+}
+*/

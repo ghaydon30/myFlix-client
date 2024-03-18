@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+import '../../index.scss';
 
 // LoginView creates a form with two labels for username and password
 // Note that input is it's own element in JSX with the given type properties
@@ -43,7 +44,7 @@ export const LoginView = ({ onLoggedIn }) => {
           localStorage.setItem("token", data.token);
           onLoggedIn(data.user, data.token);  
         } else {
-          alert('User Not Found');
+          alert('Login Failed');
         }
       })
       // Catch in case an error arrives during the promises
@@ -64,7 +65,7 @@ export const LoginView = ({ onLoggedIn }) => {
     
     // Form uses Bootstrap
     <Form onSubmit={handleSubmit}>
-      <Form.Group controlID='formUsername'>
+      <Form.Group className='form-entry' controlID='formUsername'>
         <Form.Label>Username:</Form.Label>
         <Form.Control
           type='text'
@@ -74,7 +75,7 @@ export const LoginView = ({ onLoggedIn }) => {
           required
         />
       </Form.Group>
-      <Form.Group>
+      <Form.Group className='form-entry' controlId='formPassword'>
         <Form.Label>Password:</Form.Label>
         <Form.Control 
           type='password' 
@@ -83,7 +84,7 @@ export const LoginView = ({ onLoggedIn }) => {
           required
         />
       </Form.Group>
-      <Button variant='primary' type='submit'>
+      <Button variant='primary' className='primary-button_custom' type='submit'>
         Submit
       </Button>
     </Form>

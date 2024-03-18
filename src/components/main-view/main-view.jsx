@@ -1,52 +1,84 @@
-// Child component imports, note they must have capitalized names!
+// CHILD COMPONENT IMPORTS, note they must have capitalized names!
 // The location is not required to have the ".jsx" at the end
-import { useEffect, useState } from 'react';
+
+// `useState` is a react hook that adds state to functional components
+  // Returns an array with two elements, the current state value and a function allowing state update
+import { useState } from 'react';
+
+// useEffect is a react hook that performs side effects in functional components
+  // It takes two arguments: a function that contains the code for the side effect and an optional dependency array
+import { useEffect } from 'react';
+
+// React Bootstrap is a native bootstrap rebuild in react for front-end styling
+import { Row, Col, Button } from 'react-bootstrap';
+
+// React Router handles routing in react applications by allowing you to define and navigate between different views or components based on the URL
+  // BrowserRouter component uses the HTML5 history API for clean URLs
+  // Route component renders a component when the path matches the current URL
+  // `Routes` allows you to nest `Route` components
+  // `Navigate` allows you to change the url and navigate to different locations within your app and render without requiring a page reload
+    // `Navigate` can be nested in other components and used in conjunction with logic to react, it should be used within the Route component
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+// IMPORTS FROM APP COMPONENTS
+
+// Handles making of a movie card itself
+// Will contain button for adding movie to favorite list
 import { MovieCard } from '../movie-card/movie-card';
+// Handles view an individual movie view displaying a larger photo and more detail
 import { MovieView } from '../movie-view/movie-view';
+// Handles login form for user, sets a user and token into "localStorage"
 import { LoginView } from '../login-view/login-view';
+// Handles signup for for user, posts the submitted user to the API endpoint
 import { SignupView } from '../signup-view/signup-view';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-
-
+// Navigation bar at the top of every page using `Navbar` from react-bootstrap
+import { NavigationBar } from '../navigation-bar/navigation-bar';
+// View displays user info, allows info update / deregister, and displays favorite movies
+import { ProfileView } from '../profile-view/profile-view';
 
 // Export MainView component for use in index.js, MainView is the highest level parent component
 export const MainView = () => {
   
-  // useState creates an array of movies set to following values, and updated with a method that is assigned to setMovies
+  // movies is the state variable (set to an empty array initially), setMovies updates the contents of the movies state variable array
   const [movies, setMovies] = useState([]);
-  // useState makes a variable selectedMovie beginning as null, that is updated with setSelectedMovie
-  const [selectedMovie, setSelectedMovie] = useState(null);
   
   // Use stored values (in localStorage) as default values of user and token states (what we got from the back end)
-  // NOTE: Look later into why we don't need to use JSON with token, because it is simply a string?
+  // JSON.parse is a JavaScript function converting a JSON formatted string into a JavaScript Object
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const storedToken = localStorage.getItem('token');
+  
+  // State variables for user and token
   // Checks if there is anything in storeUser and storedToken, if not, initializes with null
+  // must come after variables storedUser and storedToken
   const [user, setUser] = useState(storedUser? storedUser : null);
   const [token, setToken] = useState(storedToken? storedToken : null);
 
+  // useEffect argument 1 is an arrow function containing `MainView` logic
+  // Argument 2 is an array containing the string [token], when changed, this re-runs useEffect
   useEffect(() => {
+    
     // useEffect returns nothing of a JWT is not present, terminates function with a return statement
+    // `token` is a state variable in string form set above
     if (!token) {
       return;
     };
 
-    // fetch returns a promise (object which represents completion
-    // or failure of an asynchronous operation)
+    // fetch function sends an API request to the API & returns a promise object or
+    // or failure of an asynchronous operation
     fetch('https://cf-movies-flix-24da19dbdabb.herokuapp.com/movies', {
-      // sent JWT in header of /movies API call
+      // the headers property is part of the configuration object passed as the second argument to the fetch function
+      // headers contains key-value pairs, sending an authorization header with a template literal ``
+      // Template literal contains the token variable, bearer indicates a bearer token that allows access to the user
       headers: { Authorization: `Bearer ${token}` }
     })
-    // .then function passed promise object from fetch
+    // .then method passed promise object from fetch
     // .then converts fetch promise response object to JSON object
     .then((response) => response.json())
-    // 1st .then function passes callback (json object) to .then
-    // 2nd .then logs JSON object data to console
+    // 1st .then function passes callback (json object) to 2nd .then
     .then((data) => {
-    // moviesFromApi set to doc array made using map function
-    // .map() creates array with returned key value pairs defined below
+    // moviesFromApi variable set to doc array made using map function
+    // .map() creates array with returned key value pairs defined below (from data object)
+      console.log(data);
       const moviesFromApi = data.map((doc) => {
         return {
           id: doc._id,
@@ -58,59 +90,215 @@ export const MainView = () => {
         };
       });
       // use setMovies function call from useState() to "hook" update
-      // to state of your component (moviesFromApi array variable)
+      // to state of your component (moviesFromApi array variable with all key value pairs)
       setMovies(moviesFromApi);
     });
     // callback doesn't depend on changes in props or state
-    // Add token as callback to the useEffect function as a dependency array
+    // Add token as callback to the useEffect function as a dependency array, effect will run whenever token is changed
+    // Were the dependency array empty, the effect runs once after the initial render
+    // Omitted dependency array means the effect would run after every render
   }, [token]);
 
-  // Rewrite of previous code now using Rows and ternary operators
+  // Code to add a favorite movie to the user list
+  const addFav = (id) => {
+    fetch(`https://cf-movies-flix-24da19dbdabb.herokuapp.com/users/${user.Username}/movies/${id}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        alert('Failed to add');
+      }
+      }).then((user) => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+          setUser(user);
+        }
+    }).catch(error => {
+      console.error('Error: ', error);
+    });
+  };
+
+  // Code to delete a favorite movie to the user list
+  const deleteFav = (id) => {
+    fetch(`https://cf-movies-flix-24da19dbdabb.herokuapp.com/users/${user.Username}/movies/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        alert('Failed to add');
+      }
+      }).then((user) => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+          setUser(user);
+        }
+    }).catch(error => {
+      console.error('Error: ', error);
+    });
+  };
+
+  // return statement for MainView, contains routing for all views
   return (
-    <Row className='justify-content-md-center'>
-      {!user ? (
-        // Pass a prop from MainView with a callback function that will update the current user
-        // Callback function assigned to onLoggedIn prop takes parameter user from LoginView and executes setUser to update the mainView user variable
-        // use setToken to update the token state with the token retrieved from the API (now a string)
-        // If a user is not found, display SignupView in MainView along with the existing LoginView
-        // So long as SignupView is imported, this component can be inserted as an element
-        <Col md={5}>
-          <LoginView onLoggedIn={(user, token) => {
-            setUser(user)
-            setToken(token)
-          }} />
-          or 
-          <SignupView />
-        </Col>
-      ) : selectedMovie ? (
-        // sets selectedMovie to null if property onBackClick is actuated by event listener on movie-view
-        <Col md={8}>
-          <MovieView movie={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
-        </Col>
+    // `BrowserRouter` is the high level component of the routing functionality
+    <BrowserRouter>
+      {/* 
+        NavigationBar is a component that is always displayed 
+        It is passed two props, user and onLoggedOut, an arrow function which sets the user and JWT to null
+      */}
+      <NavigationBar 
+        user={user} 
+        onLoggedOut={() => {
+          setUser(null)
+          setToken(null)
+        }}
+      />
+      
+      {/* Row provides bootstrap styling to justify content center */}
+      <Row className='justify-content-md-center'>
+        {/* Routes holds individual `Route` Components */}
+        <Routes>
+          
+          {/* SIGNUP ROUTE */}
+          <Route 
+            // Path contains a string that when matched to the URL, will render the components contained in `element`
+            path='/signup'
+            element={
+              <>
+                {/* 
+                  Ternary operator used here to check if the user is truthy or falsy
+                  The first () will be executed if true, the second if false
+                 */}
+                {user ? (
+                  // Take them to the main page of the app if a user is present
+                  <Navigate to='/' />
+                ) : (
+                  // If user is falsy (null) display `SignupView` in a Col 5/12's of the page
+                  <Col md={5}>
+                    <SignupView/>
+                  </Col>
+                )}
+              </>
+            }
+          />
         
-        // returns a statement if the movies array is empty 
-      ) : movies.length === 0 ? (
-        <div>The list is empty!</div>
-      ) : (
-        // map method maps each element in the movies array to a piece of the UI
-        // This is done by filling and mapping a MovieCard with information from movies
-        // Add a button for logout at the bottom of the page with an onClick handler from React
-        // onClick handler has a callback function that calls setUser and passes null value
-        // Key attribute required for recurring elements in succession in react 
-      <>
-        {movies.map((movie) => (
-          <Col className='mb-5' key={movie.id} md={3}>
-            <MovieCard 
-              movie={movie}
-              onMovieClick={(newSelectedMovie) => {
-                setSelectedMovie(newSelectedMovie);
-              }}
-            />
-          </Col>
-        ))}
-        <Button className='mb-5' variant='primary' onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</Button>
-      </>
-      )}
-    </Row>
+          {/* LOGIN ROUTE */}
+          <Route 
+            // Path to render login page (`LoginView` component)
+            path='/login'
+            element={
+              <>
+                {/* If the user is present, navigate to main page */}
+                {user ? (
+                  <Navigate to='/' />
+                  ) : (
+                    // Otherwise display LoginView with prop onLoggedIn
+                    /* 
+                      This function called in LoginView updates the user and token state variables 
+                      using setUser and setToken. The updates come from an API call to the back end
+                      given that the user's login credentials are correct on the LoginView form
+                    */ 
+                    <Col md={5}>
+                      <LoginView onLoggedIn={(user, token) => {
+                        setUser(user)
+                        setToken(token)
+                      }} />
+                    </Col>
+                  )}
+              </>
+            }
+          />
+          
+          {/* MovieView ROUTE */}
+          <Route 
+            // NOTE: the :MovieID endpoint, you needed a capital M, look into exactly why (Back end)
+            path='/movies/:MovieId'
+            element={
+              <>
+                {!user ? (
+                  <Navigate to='/login' replace />
+                  // returns a statement if the movies array is empty 
+                ) : movies.length === 0 ? (
+                  <Col>The list is empty!</Col>
+                ) : (
+                  // sets selectedMovie to null if property onBackClick is actuated by event listener on movie-view
+                  <Col md={8}>
+                    <MovieView movies={movies} />
+                  </Col>
+                )}
+              </>
+            }
+          />
+          
+          {/* ALL MOVIES MAIN PAGE ROUTE */}
+          <Route 
+            path='/'
+            element={
+              <>
+                {!user ? (
+                  // The `replace` prop is passed here to eliminate the previous page from router history
+                  // This means when going back the user will skip the page before login
+                  <Navigate to='/login' replace />
+                  // returns a statement if the movies array is empty 
+                ) : movies.length === 0 ? (
+                  <Col>The list is empty!</Col>
+                ) : (
+                  // map method executes the arrow function for each element(movie) in the movies array
+                  // For each movie, a column component is created with an instance of MovieCard
+                  <>
+                    {movies.map((movie) => (
+                      // Key attribute required for recurring same-type elements in succession in react
+                      <Col className='mb-5' key={movie.id} md={3}>
+                        <MovieCard 
+                          // The movie object is passed to MovieCard as a Prop
+                          movie={movie}
+                          addFav={addFav}
+                          deleteFav={deleteFav}
+                          user={user}
+                        />
+                      </Col>
+                    ))}
+                    {/* Add a button for logout at the bottom of the page with an onClick handler from React */}
+                    {/* onClick handler has a callback function that calls setUser and setToken and passes null value */}
+                    <Button variant='primary' className='primary-button_custom' onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</Button>
+                  </>
+                )}
+              </>
+            }
+          />
+          
+          {/* PROFILE VIEW PAGE */}
+          <Route
+            path='/profile'
+            element={
+              <>
+                {!user ? (
+                  // The `replace` prop is passed here to eliminate the previous page from router history
+                  // This means when going back the user will skip the page before login
+                  <Navigate to='/login' replace />
+                ) : (
+                  <ProfileView
+                    user={user}
+                    token={token}
+                    movies={movies}
+                    setUser={setUser}
+                    addFav={addFav}
+                    deleteFav={deleteFav}
+                  /> 
+                )}
+              </> 
+            }
+          />
+          
+        </Routes>
+      </Row>
+    </BrowserRouter>
   )
 };
