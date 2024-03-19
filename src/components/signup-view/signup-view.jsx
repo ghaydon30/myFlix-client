@@ -10,6 +10,8 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+import '../../index.scss';
+
 export const SignupView = () => {
   
   // Declare state variables for signup inputs
@@ -49,7 +51,7 @@ export const SignupView = () => {
 
     // Form uses Bootstrap
     <Form onSubmit={handleSubmit}>
-      <Form.Group controlID='formUsername'>
+      <Form.Group className='form-entry' controlID='formUsername'>
         <Form.Label>Username:</Form.Label>
         <Form.Control
           type='text'
@@ -59,7 +61,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
-      <Form.Group>
+      <Form.Group className='form-entry'>
         <Form.Label>Password:</Form.Label>
         <Form.Control 
           type='password' 
@@ -68,7 +70,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
-      <Form.Group>
+      <Form.Group className='form-entry'>
         <Form.Label>Email:</Form.Label>
         <Form.Control 
           type='email' 
@@ -77,7 +79,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
-      <Form.Group>
+      <Form.Group className='form-entry'>
         <Form.Label>Birthday:</Form.Label>
         <Form.Control 
           type='date' 
