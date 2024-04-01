@@ -3,9 +3,12 @@
 
 $body-bg: #000;
 $body-color: white;
-$border-color: red;
+$border-color: white;
 $btn-color: red;
-$btn-link-hover-color: red;
+// $btn-link-hover-color: red;
+$primary: red;
+$link-shade-percentage: 20%;
+$nav-link-hover-color: white;
 
 // Basic Variables
 $primary-color: red;
@@ -13,7 +16,7 @@ $secondary-color: black;
 $primary_background-color: black;
 $text_primary-color: white;
 $text_secondary-color: red;
-$border-color: white;
+
 
 // Note that import comes after any changes in bootstrap variables  
 // but before custom classes
@@ -28,6 +31,11 @@ $border-color: white;
   text-overflow: ellipsis;
   white-space: nowrap;
   height: 400px;
+}
+
+.card-border {
+  border-color: $border-color;
+  border-width: 2px;
 }
 
 .primary-button_custom {
@@ -45,7 +53,7 @@ $border-color: white;
 }
 
 .custom-navbar {
-  background-color: $body-bg !important;
+  background-color: $body-bg;
 }
 
 .custom-title_navlink {
@@ -53,52 +61,29 @@ $border-color: white;
   font-size: 40px;
 }
 
+.navbar-nav {
+  --bs-nav-link-hover-color: red;
+}
+
+.navbar {
+  --bs-navbar-hover-color: white;
+  --bs-navbar-brand-hover-color: white;
+}
+
 .custom-standard_navlink {
-color: $text_primary-color;
-font-size: 24px;
+  color: $text_primary-color;
+  font-size: 24px;
 }
 
 .form-entry {
   margin-bottom: 20px;
 }
 
-// Find out what this is
-/*
-.my-flix {
-  color: $color;
-}
-*/
-
-// Old location, delete when styling works
-/*
-// Basic Variables
-$primary-color: red;
-$secondary-color: black;
-$primary_background-color: black;
-$text_primary-color: white;
-$text_secondary-color: red;
-$border-color: white;
-
-.styled_movie-card {
-  margin-bottom: 15px;
-  position: relative;
-  // Allows for no overflow on card images when controlling height
-  overflow: hidden;
-  // Causes no wrapping text if it overflows
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  height: 400px;
+.form-group {
+  margin-top: 10px;
 }
 
-.btn-primaryX {
-  color: $text_primary-color;
-  background-color: $primary-color;
-}
+.search-entry {
+  margin-bottom: 20px;
 
-.secondary-button {
-  color: $text_secondary-color;
-  background-color: $primary_background-color;
-  border-color: $border-color;
-  border-radius: 12px;
 }
-*/

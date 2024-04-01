@@ -45,7 +45,7 @@ export const MovieView = ({ movies }) => {
             <Card.Text>{'Genre: ' + movie.genre}</Card.Text>
             <Card.Text>{'Description: ' + movie.description}</Card.Text>
             <Link to='/'>
-              <Button className='close-open-btn'>Back</Button>
+              <Button className='primary-button_custom'>Back</Button>
             </Link>
           </Card.Body>
         </Col>

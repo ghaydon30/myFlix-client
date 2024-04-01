@@ -35,6 +35,8 @@ import { SignupView } from '../signup-view/signup-view';
 import { NavigationBar } from '../navigation-bar/navigation-bar';
 // View displays user info, allows info update / deregister, and displays favorite movies
 import { ProfileView } from '../profile-view/profile-view';
+// debounce allows for delays after user inputs to search
+import { debounce } from 'lodash';
 
 // Export MainView component for use in index.js, MainView is the highest level parent component
 export const MainView = () => {
@@ -52,6 +54,10 @@ export const MainView = () => {
   // must come after variables storedUser and storedToken
   const [user, setUser] = useState(storedUser? storedUser : null);
   const [token, setToken] = useState(storedToken? storedToken : null);
+
+  // State variables for movie search function
+  const [searchKey, setSearchKey] = useState('');
+  const [filteredMovies, setFilteredMovies] = useState([]);
 
   // useEffect argument 1 is an arrow function containing `MainView` logic
   // Argument 2 is an array containing the string [token], when changed, this re-runs useEffect
@@ -92,6 +98,7 @@ export const MainView = () => {
       // use setMovies function call from useState() to "hook" update
       // to state of your component (moviesFromApi array variable with all key value pairs)
       setMovies(moviesFromApi);
+      setFilteredMovies(moviesFromApi);
     });
     // callback doesn't depend on changes in props or state
     // Add token as callback to the useEffect function as a dependency array, effect will run whenever token is changed
@@ -144,6 +151,18 @@ export const MainView = () => {
       console.error('Error: ', error);
     });
   };
+
+  // Code to handle a search input
+  const handleSearch = (search) => {
+    setSearchKey(search.target.value);
+    movieSearch(search.target.value);
+  };
+  const movieSearch = debounce((searchKey) => {
+    const tempMovieFilter = movies.filter((movie) => {
+      return movie.title.toLowerCase().includes(searchKey.toLowerCase())
+    });
+    setFilteredMovies(tempMovieFilter);
+  }, 400);
 
   // return statement for MainView, contains routing for all views
   return (
@@ -250,25 +269,34 @@ export const MainView = () => {
                 ) : movies.length === 0 ? (
                   <Col>The list is empty!</Col>
                 ) : (
-                  // map method executes the arrow function for each element(movie) in the movies array
-                  // For each movie, a column component is created with an instance of MovieCard
                   <>
-                    {movies.map((movie) => (
-                      // Key attribute required for recurring same-type elements in succession in react
-                      <Col className='mb-5' key={movie.id} md={3}>
-                        <MovieCard 
-                          // The movie object is passed to MovieCard as a Prop
-                          movie={movie}
-                          addFav={addFav}
-                          deleteFav={deleteFav}
-                          user={user}
-                        />
-                      </Col>
-                    ))}
-                    {/* Add a button for logout at the bottom of the page with an onClick handler from React */}
-                    {/* onClick handler has a callback function that calls setUser and setToken and passes null value */}
-                    <Button variant='primary' className='primary-button_custom' onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</Button>
+                    <Col className='search-entry' md={12}>
+                      <input
+                        type='text'
+                        value={searchKey}
+                        onChange={handleSearch}
+                        placeholder='Search movies...'
+                      />
+                    </Col>
+                    <>
+                      {filteredMovies.map((movie) => (
+                        // Key attribute required for recurring same-type elements in succession in react
+                        <Col className='mb-5' key={movie.id} md={3}>
+                          <MovieCard 
+                            // The movie object is passed to MovieCard as a Prop
+                            movie={movie}
+                            addFav={addFav}
+                            deleteFav={deleteFav}
+                            user={user}
+                          />
+                        </Col>
+                      ))}
+                      {/* Add a button for logout at the bottom of the page with an onClick handler from React */}
+                      {/* onClick handler has a callback function that calls setUser and setToken and passes null value */}
+                      <Button variant='primary' className='primary-button_custom' onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</Button>
+                    </>
                   </>
+                  
                 )}
               </>
             }
