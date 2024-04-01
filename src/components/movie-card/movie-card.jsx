@@ -21,9 +21,9 @@ export const MovieCard = ({ movie, addFav, deleteFav, user }) => {
   return (
     // Card component holds the MovieCard itself
     // All Card.Part_of_Card contain sub-components that provide styling details
-    <Card className="h-100">
+    <Card className={'h-100, card-border'}>
       {/* height='400' */}
-      <Card.Img className="styled_movie-card" variant="top" src={movie.image} />
+      <Card.Img className='styled_movie-card' variant='top' src={movie.image} />
       <Card.Body>
         <Card.Title>{movie.title}</Card.Title>
         <Card.Text>{movie.director}</Card.Text>
@@ -50,16 +50,16 @@ export const MovieCard = ({ movie, addFav, deleteFav, user }) => {
           <Col>
             {isFavorite ? (
               <Button
-                variant="primary"
-                className="primary-button_custom"
+                variant='primary'
+                className='primary-button_custom'
                 onClick={() => deleteFav(movie.id)}
               >
                 Unfavorite
               </Button>
             ) : (
               <Button
-                variant="primary"
-                className="primary-button_custom"
+                variant='primary'
+                className='primary-button_custom'
                 onClick={() => addFav(movie.id)}
               >
                 Favorite

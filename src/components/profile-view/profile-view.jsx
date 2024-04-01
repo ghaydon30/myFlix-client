@@ -113,58 +113,58 @@ export const ProfileView = ({ movies, user, token, setUser, addFav, deleteFav })
           <>
             <h4>Update</h4>
             <Form>
-              <Form.Group controlID="formUsername">
+              <Form.Group className='form-group' controlID='formUsername'>
                 <Form.Label>Username:</Form.Label>
                 <Form.Control
-                  type="text"
+                  type='text'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   // onChange={(e) => handleUpdate(e)}
-                  minLength="5"
+                  minLength='5'
                   required
-                  placeholder="Enter a Username"
+                  placeholder='Enter a Username'
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group className='form-group'>
                 <Form.Label>Password:</Form.Label>
                 <Form.Control
-                  type="password"
+                  type='password'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   // onChange={(e) => handleUpdate(e)}
                   required
-                  placeholder="Enter a Password"
+                  placeholder='Enter a Password'
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group className='form-group'>
                 <Form.Label>Email:</Form.Label>
                 <Form.Control
-                  type="email"
+                  type='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   // onChange={(e) => handleUpdate(e)}
                   required
-                  placeholder="Enter an Email"
+                  placeholder='Enter an Email'
                 />
               </Form.Group>
-              <Form.Group>
+              <Form.Group className='form-group'>
                 <Form.Label>Birthday:</Form.Label>
                 <Form.Control
-                  type="date"
+                  type='date'
                   value={birthday}
                   onChange={(e) => setBirthday(e.target.value)}
                   // onChange={(e) => handleUpdate(e)}
                   required
-                  placeholder="Enter Corrected Birthday"
+                  placeholder='Enter Corrected Birthday'
                 />
               </Form.Group>
 
               <Row>
                 <Col>
                   <Button
-                    variant="primary"
-                    className="primary-button_custom"
-                    type="submit"
+                    variant='primary'
+                    className='primary-button_custom'
+                    type='submit'
                     onClick={handleUpdate}
                   >
                     Update Profile
@@ -175,9 +175,9 @@ export const ProfileView = ({ movies, user, token, setUser, addFav, deleteFav })
               <Row>
                 <Col>
                   <Button
-                    variant="primary"
-                    className="primary-button_custom"
-                    type="submit"
+                    variant='primary'
+                    className='primary-button_custom'
+                    type='submit'
                     onClick={handleDelete}
                   >
                     Delete Account
@@ -190,19 +190,19 @@ export const ProfileView = ({ movies, user, token, setUser, addFav, deleteFav })
       </Row>
 
       <Row>
-        <h1 className="mt-5 text-center custom-title_navlink">
+        <h1 className='mt-5 text-center custom-title_navlink'>
           Favorite Movies
         </h1>
       </Row>
 
       <Row>
         {favoriteMovieList.length == 0 ? (
-          <h2 className="mt-5 text-center">No Movies to Display</h2>
+          <h2 className='mt-5 text-center'>No Movies to Display</h2>
         ) : (
           <>
             {favoriteMovieList.map((movie) => (
               // Key attribute required for recurring same-type elements in succession in react
-              <Col className="mb-5" key={movie.id} md={3}>
+              <Col className='mb-5' key={movie.id} md={3}>
                 <MovieCard
                   // The movie object is passed to MovieCard as a Prop
                   movie={movie}

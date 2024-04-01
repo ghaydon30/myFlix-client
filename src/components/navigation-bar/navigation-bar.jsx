@@ -8,8 +8,8 @@ import '../../index.scss';
 
 export const NavigationBar = ({ user, onLoggedOut }) => {
   return (
-    <Navbar bg='light' className='custom-navbar' expand='lg'>
-    {/*  */}
+    <Navbar className='custom-navbar' expand='lg'>
+    {/* bg='light' */}
       <Container>
         <Navbar.Brand className='custom-title_navlink' style={{fontSize: '40px'}} as={Link} to='/'>
           Movies App

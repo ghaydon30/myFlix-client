@@ -51,7 +51,7 @@ export const SignupView = () => {
 
     // Form uses Bootstrap
     <Form onSubmit={handleSubmit}>
-      <Form.Group className='form-entry' controlID='formUsername'>
+      <Form.Group className='form-group' controlID='formUsername'>
         <Form.Label>Username:</Form.Label>
         <Form.Control
           type='text'
@@ -61,7 +61,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
-      <Form.Group className='form-entry'>
+      <Form.Group className='form-group'>
         <Form.Label>Password:</Form.Label>
         <Form.Control 
           type='password' 
@@ -70,7 +70,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
-      <Form.Group className='form-entry'>
+      <Form.Group className='form-group'>
         <Form.Label>Email:</Form.Label>
         <Form.Control 
           type='email' 
@@ -79,7 +79,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
-      <Form.Group className='form-entry'>
+      <Form.Group className='form-group'>
         <Form.Label>Birthday:</Form.Label>
         <Form.Control 
           type='date' 
@@ -88,7 +88,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
-      <Button variant='primary' type='submit'>
+      <Button variant='primary' type='submit' className='primary-button_custom'>
         Submit
       </Button>
     </Form>
